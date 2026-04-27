@@ -1,0 +1,151 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+export default function GlobalAquaticWebsite() {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [language, setLanguage] = useState("EN");
+  const [currency, setCurrency] = useState("USD");
+
+  const text = {
+    EN: {
+      hero: "Premium Stingray Export from Indonesia",
+      contact: "Bulk Order & Export Inquiry",
+    },
+    ID: {
+      hero: "Ekspor Ikan Pari Premium dari Indonesia",
+      contact: "Pemesanan & Ekspor",
+    },
+  };
+
+  const products = [
+    {
+      name: "Black Diamond Stingray",
+      priceUSD: 350,
+      size: "20 cm",
+      status: "Ready",
+      image: "https://images.unsplash.com/photo-1581888227599-779811939961",
+    },
+    {
+      name: "Motoro Stingray",
+      priceUSD: 180,
+      size: "18 cm",
+      status: "Pre-Order",
+      image: "https://images.unsplash.com/photo-1574170609519-d1c54e0c3fd8",
+    },
+  ];
+
+  const convertPrice = (usd) => {
+    if (currency === "IDR") return `Rp ${(usd * 15500).toLocaleString()}`;
+    return `$${usd}`;
+  };
+
+  return (
+    <div className="bg-white text-gray-800">
+      {/* Navbar */}
+      <header className="flex justify-between items-center px-10 py-5 border-b">
+        <h1 className="text-2xl font-bold text-green-900">Mutiara Aquatic</h1>
+        <div className="flex gap-4">
+          <select onChange={(e) => setLanguage(e.target.value)}>
+            <option value="EN">EN</option>
+            <option value="ID">ID</option>
+          </select>
+          <select onChange={(e) => setCurrency(e.target.value)}>
+            <option value="USD">USD</option>
+            <option value="IDR">IDR</option>
+          </select>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <section className="h-[70vh] flex items-center justify-center text-center bg-gradient-to-b from-white to-green-50">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <h2 className="text-4xl font-bold text-green-900 mb-4">
+            {text[language].hero}
+          </h2>
+          <p className="mb-6">Trusted Exporter • Certified • Premium Quality</p>
+        </motion.div>
+      </section>
+
+      {/* Products */}
+      <section className="px-10 py-10 grid md:grid-cols-2 gap-6">
+        {products.map((p, i) => (
+          <Card key={i} className="rounded-2xl shadow-lg">
+            <img src={p.image} className="h-48 w-full object-cover" />
+            <CardContent>
+              <h4 className="font-semibold text-lg">{p.name}</h4>
+              <p>Size: {p.size}</p>
+              <p>Status: {p.status}</p>
+              <p className="font-bold text-green-800">
+                {convertPrice(p.priceUSD)}
+              </p>
+              <div className="flex gap-2 mt-3">
+                <Button onClick={() => setSelectedProduct(p)}>
+                  Detail
+                </Button>
+                <a
+                  href={`https://wa.me/6281234567890?text=I want to order ${p.name}`}
+                  target="_blank"
+                >
+                  <Button className="bg-yellow-500 text-black">WhatsApp</Button>
+                </a>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+
+      {/* Detail Modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-2xl max-w-md">
+            <img src={selectedProduct.image} className="mb-4 rounded-xl" />
+            <h3 className="text-xl font-bold">{selectedProduct.name}</h3>
+            <p>Size: {selectedProduct.size}</p>
+            <p>Status: {selectedProduct.status}</p>
+            <p className="font-bold text-green-800">
+              {convertPrice(selectedProduct.priceUSD)}
+            </p>
+            <a
+              href={`https://wa.me/6281234567890?text=I want full export details about ${selectedProduct.name}`}
+              target="_blank"
+            >
+              <Button className="bg-yellow-500 text-black mt-4 w-full">
+                Request Export Deal
+              </Button>
+            </a>
+            <Button onClick={() => setSelectedProduct(null)} className="mt-2 w-full">
+              Close
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Export Info */}
+      <section className="bg-green-900 text-white py-16 text-center">
+        <h3 className="text-3xl font-bold mb-6">Export Information</h3>
+        <div className="grid md:grid-cols-3 gap-6 px-10">
+          <div>Airport to Airport Shipping</div>
+          <div>Live Fish Packing Standard</div>
+          <div>Worldwide Delivery</div>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section className="px-10 py-16 text-center">
+        <h3 className="text-2xl font-bold mb-4">{text[language].contact}</h3>
+        <a href="https://wa.me/6281234567890" target="_blank">
+          <Button className="bg-yellow-500 text-black">
+            Contact WhatsApp
+          </Button>
+        </a>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-black text-white text-center py-6">
+        © 2026 Mutiara Aquatic Indonesia • Global Export
+      </footer>
+    </div>
+  );
+}
